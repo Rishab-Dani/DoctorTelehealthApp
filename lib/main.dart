@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/login/login_screen.dart';
 
 void main() {
   runApp(const DoctorApp());
@@ -13,20 +14,10 @@ class DoctorApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Doctor TeleHealth',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
+        colorSchemeSeed: Colors.blue,
       ),
-      home: const Scaffold(
-        body: Center(
-          child: Text(
-            'Doctor TeleHealth App',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
+      home: const LoginScreen(),
     );
   }
 }
