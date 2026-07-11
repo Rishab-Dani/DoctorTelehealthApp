@@ -7,4 +7,7 @@ class AppointmentProvider extends ChangeNotifier {
 
   Stream<List<Appointment>> get appointments =>
       _service.getAppointments();
+
+  Stream<List<Appointment>> get patientAppointments =>
+      _service.getPatientAppointments();
 }

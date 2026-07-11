@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../appointment/my_appointments_screen.dart';
+import '../booking/book_appointment_screen.dart';
+
 class PatientDashboardScreen extends StatelessWidget {
   const PatientDashboardScreen({super.key});
 
@@ -96,27 +99,57 @@ class PatientDashboardScreen extends StatelessWidget {
               children: [
 
                 _buildCard(
+                  context,
                   Icons.calendar_month,
                   "Book\nAppointment",
                   Colors.blue,
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const BookAppointmentScreen(),
+                      ),
+                    );
+                  },
                 ),
 
                 _buildCard(
+                  context,
                   Icons.assignment,
                   "My\nAppointments",
                   Colors.green,
+                        () {
+
+                      Navigator.push(
+
+                        context,
+
+                        MaterialPageRoute(
+
+                          builder: (_) =>
+                          const MyAppointmentsScreen(),
+
+                        ),
+
+                      );
+
+                    }
                 ),
 
                 _buildCard(
+                  context,
                   Icons.history,
                   "History",
                   Colors.orange,
+                      () {},
                 ),
 
                 _buildCard(
+                  context,
                   Icons.person,
                   "Profile",
                   Colors.purple,
+                      () {},
                 ),
               ],
             ),
@@ -186,49 +219,57 @@ class PatientDashboardScreen extends StatelessWidget {
     );
   }
 
+
   Widget _buildCard(
+      BuildContext context,
       IconData icon,
       String title,
       Color color,
+      VoidCallback onTap,
       ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
 
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(.15),
-            blurRadius: 12,
-          ),
-        ],
-      ),
+      onTap: onTap,
 
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-
-          CircleAvatar(
-            radius: 28,
-            backgroundColor: color.withOpacity(.15),
-
-            child: Icon(
-              icon,
-              color: color,
-              size: 30,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(.15),
+              blurRadius: 12,
             ),
-          ),
+          ],
+        ),
 
-          const SizedBox(height: 14),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
 
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: color.withOpacity(.15),
+
+              child: Icon(
+                icon,
+                color: color,
+                size: 30,
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 14),
+
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
