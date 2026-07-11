@@ -16,10 +16,10 @@ class FirestoreService {
     });
   }
 
-  Future<void> addSessionNote(
-      String appointmentId,
-      String note,
-      ) async {
+  Future<void> addSessionNote({
+    required String appointmentId,
+    required String note,
+  }) async {
 
     await _firestore
         .collection('appointments')
@@ -28,32 +28,28 @@ class FirestoreService {
         .add({
 
       'note': note,
-
-      'createdAt': Timestamp.now(),
+      'createdAt': FieldValue.serverTimestamp(),
 
     });
 
   }
 
   Stream<List<SessionNote>> getSessionNotes(
-      String appointmentId,
-      ) {
+      String appointmentId) {
 
     return _firestore
         .collection('appointments')
         .doc(appointmentId)
         .collection('session_notes')
         .orderBy(
-      'createdAt',
+      "createdAt",
       descending: true,
     )
         .snapshots()
         .map((snapshot) {
 
       return snapshot.docs
-          .map(
-            (doc) => SessionNote.fromFirestore(doc),
-      )
+          .map((doc) => SessionNote.fromFirestore(doc))
           .toList();
 
     });

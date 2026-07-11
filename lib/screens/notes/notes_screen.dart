@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_textfield.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+
+import '../../models/session_note.dart';
+import '../../providers/session_note_provider.dart';
 
 class NotesScreen extends StatefulWidget {
-
   final String appointmentId;
 
   const NotesScreen({
@@ -17,12 +19,17 @@ class NotesScreen extends StatefulWidget {
 
 class _NotesScreenState extends State<NotesScreen> {
 
-  final controller = TextEditingController();
-
-  final List<String> notes = [];
+  final TextEditingController controller =
+  TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    final provider =
+    Provider.of<SessionNoteProvider>(
+      context,
+      listen: false,
+    );
 
     return Scaffold(
 
@@ -38,55 +45,152 @@ class _NotesScreenState extends State<NotesScreen> {
 
           children: [
 
-            CustomTextField(
+            TextField(
+
               controller: controller,
-              hint: "Enter Session Note",
+
               maxLines: 4,
+
+              decoration: InputDecoration(
+
+                hintText: "Write session note...",
+
+                border: OutlineInputBorder(
+
+                  borderRadius:
+                  BorderRadius.circular(12),
+
+                ),
+
+              ),
+
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
-            CustomButton(
+            SizedBox(
 
-              title: "Save Note",
+              width: double.infinity,
 
-              icon: Icons.save,
+              child: ElevatedButton.icon(
 
-              onPressed: () {
+                icon: const Icon(Icons.save),
 
-                if(controller.text.trim().isEmpty) return;
+                label: const Text("Save Note"),
 
-                setState(() {
+                onPressed: () async {
 
-                  notes.add(controller.text);
+                  if(controller.text.trim().isEmpty){
+
+                    return;
+
+                  }
+
+                  await provider.addNote(
+
+                    widget.appointmentId,
+
+                    controller.text.trim(),
+
+                  );
 
                   controller.clear();
 
-                });
+                },
 
-              },
+              ),
 
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height:20),
 
             Expanded(
 
-              child: ListView.builder(
+              child: StreamBuilder<List<SessionNote>>(
 
-                itemCount: notes.length,
+                stream: provider.notes(
+                  widget.appointmentId,
+                ),
 
-                itemBuilder: (context,index){
+                builder: (context,snapshot){
 
-                  return Card(
+                  if(snapshot.connectionState==
+                      ConnectionState.waiting){
 
-                    child: ListTile(
+                    return const Center(
 
-                      leading: const Icon(Icons.note),
+                      child:
+                      CircularProgressIndicator(),
 
-                      title: Text(notes[index]),
+                    );
 
-                    ),
+                  }
+
+                  if(snapshot.hasError){
+
+                    return Center(
+
+                      child:
+                      Text(snapshot.error.toString()),
+
+                    );
+
+                  }
+
+                  final notes =
+                      snapshot.data ?? [];
+
+                  if(notes.isEmpty){
+
+                    return const Center(
+
+                      child: Text(
+                        "No Session Notes",
+                      ),
+
+                    );
+
+                  }
+
+                  return ListView.builder(
+
+                    itemCount: notes.length,
+
+                    itemBuilder: (context,index){
+
+                      final note = notes[index];
+
+                      return Card(
+
+                        elevation:2,
+
+                        child: ListTile(
+
+                          leading: const CircleAvatar(
+
+                            child: Icon(Icons.note),
+
+                          ),
+
+                          title: Text(
+                            note.note,
+                          ),
+
+                          subtitle: Text(
+
+                            DateFormat(
+                              "dd MMM yyyy hh:mm a",
+                            ).format(
+                              note.createdAt,
+                            ),
+
+                          ),
+
+                        ),
+
+                      );
+
+                    },
 
                   );
 
@@ -97,8 +201,13 @@ class _NotesScreenState extends State<NotesScreen> {
             )
 
           ],
+
         ),
+
       ),
+
     );
+
   }
+
 }

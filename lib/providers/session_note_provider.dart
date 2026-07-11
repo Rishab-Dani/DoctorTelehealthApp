@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
-
 import '../models/session_note.dart';
 import '../services/firestore_service.dart';
 
 class SessionNoteProvider extends ChangeNotifier {
+  final FirestoreService _service = FirestoreService();
 
-  final FirestoreService _service =
-  FirestoreService();
-
-  Stream<List<SessionNote>> notes(
-      String appointmentId,
-      ) {
-    return _service.getSessionNotes(
-      appointmentId,
-    );
+  Stream<List<SessionNote>> notes(String appointmentId) {
+    return _service.getSessionNotes(appointmentId);
   }
 
   Future<void> addNote(
@@ -22,10 +15,8 @@ class SessionNoteProvider extends ChangeNotifier {
       ) async {
 
     await _service.addSessionNote(
-      appointmentId,
-      note,
+      appointmentId: appointmentId,
+      note: note,
     );
-
   }
-
 }
