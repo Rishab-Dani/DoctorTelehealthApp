@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "905870002255",
+    "project_id": "doctor-telehealth",
+    "storage_bucket": "doctor-telehealth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905870002255:android:da1bc6da762ce948cf823a",
+        "android_client_info": {
+          "package_name": "com.rishab.doctor_telehealth_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbI8JLTuvsh7frprMtRD8WvkICQckV3e0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
