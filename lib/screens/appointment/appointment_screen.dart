@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../ video_call/video_call_screen.dart';
 import '../../models/appointment.dart';
+import '../../services/video_call_service.dart';
 import '../../widgets/appointment_action_buttons.dart';
 import '../../widgets/appointment_status_chip.dart';
 import '../../widgets/patient_info_card.dart';
@@ -58,40 +59,29 @@ class AppointmentScreen extends StatelessWidget {
                   "confirmed",
 
               // video call button
-              // onVideoCall: () {
-              //   Navigator.push(
-              //
-              //     context,
-              //
-              //     MaterialPageRoute(
-              //
-              //       builder: (_)=>VideoCallScreen(
-              //
-              //         userId: appointment.patientId,
-              //
-              //         userName: appointment.patientName,
-              //
-              //         callId: appointment.id,
-              //
-              //       ),
-              //
-              //     ),
-              //
-              //   );
-              //
-              // },
-
               onVideoCall: () {
                 Navigator.push(
+
                   context,
+
                   MaterialPageRoute(
-                    builder: (_) => VideoCallScreen(
-                      userId: "doctor_001",
-                      userName: "Dr. Rishi",
-                      callId: appointment.id,
+
+                    builder: (_)=>VideoCallScreen(
+
+                      userId: VideoCallService.getUserId(),
+
+                      userName: VideoCallService.getUserName(),
+
+                      callId: VideoCallService.generateCallId(
+                        appointment.id,
+                      ),
+
                     ),
+
                   ),
+
                 );
+
               },
 
               onCancel: () {

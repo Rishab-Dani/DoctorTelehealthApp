@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/appointment.dart';
 import '../../providers/appointment_provider.dart';
+import '../../widgets/dashboard_header.dart';
+import '../../widgets/dashboard_stat_card.dart';
+import '../../widgets/dashboard_statistics.dart';
 import '../appointment/appointment_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -27,39 +30,27 @@ class DashboardScreen extends StatelessWidget {
           children: [
 
             // doctor card
-            Card(
-              elevation: 5,
+            const DashboardHeader(),
 
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
+            const SizedBox(height: 20),
 
-              child: ListTile(
-                leading: const CircleAvatar(
-                  radius: 28,
-                  child: Icon(Icons.person),
-                ),
-
-                title: const Text(
-                  "Dr. Rishi",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                subtitle: const Text("General Physician"),
-
-                trailing: const Icon(Icons.notifications),
-              ),
+            // DashboardStatistics
+            const DashboardStatistics(
+              appointments: 1,
+              notes: 1,
             ),
 
             const SizedBox(height: 25),
 
-            const Text(
-              "Today's Appointments",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            // Today's appointments
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Today's Appointments",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
 
