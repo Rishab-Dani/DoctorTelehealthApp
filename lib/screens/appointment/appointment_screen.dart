@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../ video_call/video_call_screen.dart';
 import '../../models/appointment.dart';
 import '../../widgets/appointment_action_buttons.dart';
 import '../../widgets/appointment_status_chip.dart';
@@ -56,10 +57,41 @@ class AppointmentScreen extends StatelessWidget {
               appointment.status.toLowerCase() ==
                   "confirmed",
 
+              // video call button
+              // onVideoCall: () {
+              //   Navigator.push(
+              //
+              //     context,
+              //
+              //     MaterialPageRoute(
+              //
+              //       builder: (_)=>VideoCallScreen(
+              //
+              //         userId: appointment.patientId,
+              //
+              //         userName: appointment.patientName,
+              //
+              //         callId: appointment.id,
+              //
+              //       ),
+              //
+              //     ),
+              //
+              //   );
+              //
+              // },
+
               onVideoCall: () {
-
-                // Next Phase
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => VideoCallScreen(
+                      userId: "doctor_001",
+                      userName: "Dr. Rishi",
+                      callId: appointment.id,
+                    ),
+                  ),
+                );
               },
 
               onCancel: () {
@@ -75,6 +107,7 @@ class AppointmentScreen extends StatelessWidget {
 
               },
 
+              // session note button
               onNotes: () {
 
                 Navigator.push(
