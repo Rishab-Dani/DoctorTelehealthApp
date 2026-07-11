@@ -198,4 +198,64 @@ class FirestoreService {
 
     });
   }
+
+  // confirmed appointment
+  Future<void> confirmAppointment(String appointmentId) async {
+    final doc = await _firestore
+        .collection('appointments')
+        .doc(appointmentId)
+        .get();
+
+    if (!doc.exists) {
+      throw Exception("Appointment not found.");
+    }
+
+    final status = (doc['status'] ?? '').toString().toLowerCase();
+
+    if (status == 'confirmed') {
+      throw Exception("Appointment is already confirmed.");
+    }
+
+    if (status == 'completed') {
+      throw Exception("Completed appointments cannot be confirmed.");
+    }
+
+    if (status == 'cancelled') {
+      throw Exception("Cancelled appointments cannot be confirmed.");
+    }
+
+    await _firestore
+        .collection('appointments')
+        .doc(appointmentId)
+        .update({
+      'status': 'confirmed',
+      'confirmedAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // get upcoming Appointment
+  Stream<Appointment?> getUpcomingAppointment() {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    return _firestore
+        .collection('appointments')
+        .where('patientId', isEqualTo: uid)
+        .where(
+      'status',
+      whereIn: ['Pending', 'Confirmed'],
+    )
+        .orderBy('appointmentTime')
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return null;
+      }
+
+      return Appointment.fromFirestore(
+        snapshot.docs.first,
+      );
+    });
+  }
 }

@@ -18,6 +18,8 @@ class AppointmentScreen extends StatelessWidget {
 
   late final isCompleted = status == "completed";
   late final isCancelled = status == "cancelled";
+  late final isPending = status == "pending";
+  late final isConfirmed = status == "confirmed";
 
   late final canModify = !(isCompleted || isCancelled);
 
@@ -104,6 +106,7 @@ class AppointmentScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
+              // video consultation
               VideoConsultationCard(
                 onStartCall: () async {
 
@@ -140,6 +143,7 @@ class AppointmentScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
+              // session notes
               SessionNotesCard(
                 onTap: () {
                   Navigator.push(
@@ -154,107 +158,156 @@ class AppointmentScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.check_circle),
-                  label: const Text(
-                    "Complete Consultation",
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
+
+             // Pending -> Confirm
+              if (isPending)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.check_circle),
+                    label: const Text("Confirm Appointment"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                    onPressed: () async {
+                      try {
+                        await firestoreService.confirmAppointment(appointment.id);
+
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Appointment confirmed successfully"),
+                          ),
+                        );
+
+                        Navigator.pop(context);
+
+                      } catch (e) {
+
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              e.toString().replaceFirst("Exception: ", ""),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
                   ),
-                  onPressed: () async {
-                    try {
-                      await firestoreService.completeAppointment(appointment.id);
-
-                      if (!context.mounted) return;
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Consultation completed successfully"),
-                        ),
-                      );
-
-                      Navigator.pop(context);
-
-                    } catch (e) {
-
-                      if (!context.mounted) return;
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString().replaceFirst("Exception: ", "")),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
                 ),
-              ),
 
-              const SizedBox(height: 20),
+              // Confirmed -> Complete
+              if (isConfirmed)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.check_circle),
+                    label: const Text("Complete Consultation"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () async {
+                      try {
+                        await firestoreService.completeAppointment(appointment.id);
 
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  icon: const Icon(
-                    Icons.cancel,
-                    color: Colors.red,
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Consultation completed successfully"),
+                          ),
+                        );
+
+                        Navigator.pop(context);
+
+                      } catch (e) {
+
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              e.toString().replaceFirst("Exception: ", ""),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
                   ),
-                  label: const Text(
-                    "Cancel Appointment",
-                    style: TextStyle(
+                ),
+
+              if (canModify) ...[
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(
+                      Icons.cancel,
                       color: Colors.red,
-                      fontWeight: FontWeight.w600,
                     ),
+                    label: const Text(
+                      "Cancel Appointment",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(
+                        color: Colors.red.shade200,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () async {
+                      try {
+                        await firestoreService.cancelAppointment(appointment.id);
+
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Appointment cancelled successfully"),
+                          ),
+                        );
+
+                        Navigator.pop(context);
+
+                      } catch (e) {
+
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              e.toString().replaceFirst("Exception: ", ""),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
                   ),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                    ),
-                    side: BorderSide(
-                      color: Colors.red.shade200,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  onPressed: () async {
-                    try {
-                      await firestoreService.cancelAppointment(appointment.id);
-
-                      if (!context.mounted) return;
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Appointment canceled successfully"),
-                        ),
-                      );
-
-                      Navigator.pop(context);
-
-                    } catch (e) {
-
-                      if (!context.mounted) return;
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString().replaceFirst("Exception: ", "")),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
                 ),
-              ),
+              ],
 
               const SizedBox(height: 20),
             ],

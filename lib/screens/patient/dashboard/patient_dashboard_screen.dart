@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../models/appointment.dart';
+import '../../../providers/appointment_provider.dart';
 import '../appointment/my_appointments_screen.dart';
 import '../booking/book_appointment_screen.dart';
 
@@ -75,6 +78,7 @@ class PatientDashboardScreen extends StatelessWidget {
                 ],
               ),
             ),
+
 
             const SizedBox(height: 30),
 
@@ -156,6 +160,7 @@ class PatientDashboardScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
+            // upcoming appointments
             const Text(
               "Upcoming Appointment",
               style: TextStyle(
@@ -166,52 +171,140 @@ class PatientDashboardScreen extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+            StreamBuilder<List<Appointment>>(
+              stream: context.read<AppointmentProvider>().patientAppointments,
+              builder: (context, snapshot) {
 
-              child: Padding(
-                padding: const EdgeInsets.all(18),
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    const Text(
-                      "No Upcoming Appointment",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                if (snapshot.hasError) {
+                  return Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(snapshot.error.toString()),
                     ),
+                  );
+                }
 
-                    const SizedBox(height: 8),
-
-                    Text(
-                      "Book your first consultation with a doctor.",
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                      ),
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-
-                    const SizedBox(height: 18),
-
-                    SizedBox(
-                      width: double.infinity,
-
-                      child: ElevatedButton(
-                        onPressed: () {},
-
-                        child: const Text(
-                          "Book Appointment",
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "No Upcoming Appointment",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  );
+                }
+
+                final appointment = snapshot.data!.first;
+
+                Color statusColor;
+
+                switch (appointment.status.toLowerCase()) {
+                  case "confirmed":
+                    statusColor = Colors.green;
+                    break;
+
+                  case "pending":
+                    statusColor = Colors.orange;
+                    break;
+
+                  case "completed":
+                    statusColor = Colors.blue;
+                    break;
+
+                  case "cancelled":
+                    statusColor = Colors.red;
+                    break;
+
+                  default:
+                    statusColor = Colors.grey;
+                }
+
+                return Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Text(
+                          appointment.doctorName,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Text(
+                          appointment.reason,
+                          style: TextStyle(
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        Text(
+                          appointment.appointmentTime.toString(),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        Chip(
+                          backgroundColor:
+                          statusColor.withOpacity(.15),
+
+                          label: Text(
+                            appointment.status,
+                            style: TextStyle(
+                              color: statusColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        if (appointment.status.toLowerCase() == "confirmed") ...[
+                          const SizedBox(height: 15),
+
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              icon: const Icon(Icons.video_call),
+                              label: const Text(
+                                "Join Consultation",
+                              ),
+                              onPressed: () {
+                                // Next phase:
+                                // Navigate to VideoCallScreen
+                              },
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

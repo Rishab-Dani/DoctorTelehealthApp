@@ -1,3 +1,4 @@
+import 'package:doctor_telehealth_app/screens/patient/appointment/patient_appointment_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -65,7 +66,33 @@ class MyAppointmentsScreen extends StatelessWidget {
               final appointment =
               appointments[index];
 
-              return Card(
+              return InkWell(
+
+                  borderRadius:
+                  BorderRadius.circular(16),
+
+                  onTap: () {
+
+                    Navigator.push(
+
+                      context,
+
+                      MaterialPageRoute(
+
+                        builder: (_) =>
+                            PatientAppointmentDetailsScreen(
+
+                              appointment: appointment,
+
+                            ),
+
+                      ),
+
+                    );
+
+                  },
+
+                  child: Card(
 
                 margin:
                 const EdgeInsets.only(
@@ -92,6 +119,7 @@ class MyAppointmentsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+               ),
               );
             },
           );

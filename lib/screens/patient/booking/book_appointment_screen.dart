@@ -12,20 +12,7 @@ class BookAppointmentScreen extends StatefulWidget {
       _BookAppointmentScreenState();
 }
 
-// Future<void> loadPatient() async {
-//
-//   patient =
-//   await firestoreService.getCurrentPatient();
-//
-//   _nameController.text = patient!.name;
-//
-//   _phoneController.text = patient!.phone;
-//
-//   _ageController.text =
-//       patient!.age.toString();
-//
-//   setState(() {});
-// }
+
 
 class _BookAppointmentScreenState
     extends State<BookAppointmentScreen> {
@@ -45,11 +32,11 @@ class _BookAppointmentScreenState
 
   bool loading = false;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadPatient();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    loadPatient();
+  }
 
   @override
   void dispose() {
@@ -59,6 +46,23 @@ class _BookAppointmentScreenState
     _reasonController.dispose();
     super.dispose();
   }
+
+  Future<void> loadPatient() async {
+
+    final patient =
+    await firestoreService.getCurrentPatient();
+
+    if (patient == null) return;
+
+    _nameController.text = patient.name;
+    _ageController.text = patient.age.toString();
+    _phoneController.text = patient.phone;
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
 
   Future<void> selectDate() async {
     final picked = await showDatePicker(
