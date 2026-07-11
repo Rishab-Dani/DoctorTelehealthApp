@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../dashboard/dashboard_screen.dart';
 
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -18,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// authProvider variable
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
 
@@ -99,22 +104,45 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 child: ElevatedButton(
 
-                  onPressed: (){
+                    onPressed: () async {
+                      if (!formKey.currentState!.validate()) return;
 
-                    if(formKey.currentState!.validate()){
+                      final authProvider =
+                      Provider.of<AuthProvider>(context, listen: false);
 
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const DashboardScreen(),
-                            ),
-                          );
+                      final success = await authProvider.login(
+                        emailController.text.trim(),
+                        passwordController.text.trim(),
+                      );
 
-                    }
+                      if (!mounted) return;
 
-                  },
+                      if (success) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const DashboardScreen(),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Invalid email or password"),
+                          ),
+                        );
+                      }
+                    },
 
-                  child: const Text("LOGIN"),
+                  child: authProvider.loading
+                      ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                      : const Text("LOGIN"),
 
                 ),
 
