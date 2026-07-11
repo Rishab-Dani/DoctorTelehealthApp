@@ -8,6 +8,10 @@ class Appointment {
   final String phone;
   final String status;
   final DateTime appointmentTime;
+  final String doctorId;
+  final String doctorName;
+  final String reason;
+  final DateTime createdAt;
 
   Appointment({
     required this.id,
@@ -17,6 +21,10 @@ class Appointment {
     required this.phone,
     required this.status,
     required this.appointmentTime,
+    required this.doctorId,
+    required this.doctorName,
+    required this.reason,
+    required this.createdAt,
   });
 
   factory Appointment.fromFirestore(DocumentSnapshot doc) {
@@ -31,6 +39,15 @@ class Appointment {
       status: data['status'],
       appointmentTime:
       (data['appointmentTime'] as Timestamp).toDate(),
+      doctorId: data['doctorId'] ?? '',
+
+      doctorName: data['doctorName'] ?? '',
+
+      reason: data['reason'] ?? '',
+
+      createdAt:
+      (data['createdAt'] as Timestamp?)?.toDate() ??
+          DateTime.now(),
     );
   }
 
@@ -42,6 +59,10 @@ class Appointment {
       'phone': phone,
       'status': status,
       'appointmentTime': appointmentTime,
+      'doctorId': doctorId,
+      'doctorName': doctorName,
+      'reason': reason,
+      'createdAt': createdAt,
     };
   }
 }

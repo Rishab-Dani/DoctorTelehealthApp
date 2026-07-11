@@ -6,7 +6,7 @@ class AuthProvider extends ChangeNotifier {
 
   bool loading = false;
 
-  Future<bool> login(
+  Future<String?> login(
       String email,
       String password,
       ) async {
@@ -18,17 +18,19 @@ class AuthProvider extends ChangeNotifier {
 
       await _service.login(email, password);
 
+      final role = await _service.getUserRole();
+
       loading = false;
       notifyListeners();
 
-      return true;
+      return role;
 
     } catch (e) {
 
       loading = false;
       notifyListeners();
 
-      return false;
+      return null;
     }
   }
 }

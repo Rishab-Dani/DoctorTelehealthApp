@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/login/login_footer.dart';
 import '../../widgets/login/login_header.dart';
 import '../dashboard/dashboard_screen.dart';
+import '../patient/dashboard/patient_dashboard_screen.dart';
 
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
@@ -19,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -95,14 +98,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       // password field
                       TextFormField(
                         controller: passwordController,
+                        obscureText: _obscurePassword,
 
                         decoration: InputDecoration(
                           hintText: "Password",
 
                           prefixIcon: const Icon(Icons.lock),
 
-                          filled: true,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
 
+                          filled: true,
                           fillColor: Colors.grey.shade100,
 
                           border: OutlineInputBorder(
@@ -115,7 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (value == null || value.length < 6) {
                             return "Password should be minimum 6 characters";
                           }
-
                           return null;
                         },
                       ),
@@ -137,26 +152,41 @@ class _LoginScreenState extends State<LoginScreen> {
                               listen: false,
                             );
 
-                            final success = await authProvider.login(
+                            final role = await authProvider.login(
                               emailController.text.trim(),
                               passwordController.text.trim(),
                             );
 
                             if (!mounted) return;
 
-                            if (success) {
+                            if (role == "doctor") {
+
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => DashboardScreen(),
                                 ),
                               );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Invalid email or password"),
+
+                            } else if (role == "patient") {
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const PatientDashboardScreen(),
                                 ),
                               );
+
+                            } else {
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Invalid email, password, or user role.",
+                                  ),
+                                ),
+                              );
+
                             }
                           },
 
