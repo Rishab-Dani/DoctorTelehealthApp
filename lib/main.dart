@@ -1,5 +1,7 @@
+import 'package:doctor_telehealth_app/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'screens/login/login_screen.dart';
@@ -11,7 +13,16 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const DoctorApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ),
+      ],
+      child: const DoctorApp(),
+    ),
+  );
 }
 
 class DoctorApp extends StatelessWidget {
