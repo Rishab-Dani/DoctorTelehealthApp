@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/appointment.dart';
+import '../models/session_note.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -13,5 +14,49 @@ class FirestoreService {
           .map((doc) => Appointment.fromFirestore(doc))
           .toList();
     });
+  }
+
+  Future<void> addSessionNote(
+      String appointmentId,
+      String note,
+      ) async {
+
+    await _firestore
+        .collection('appointments')
+        .doc(appointmentId)
+        .collection('session_notes')
+        .add({
+
+      'note': note,
+
+      'createdAt': Timestamp.now(),
+
+    });
+
+  }
+
+  Stream<List<SessionNote>> getSessionNotes(
+      String appointmentId,
+      ) {
+
+    return _firestore
+        .collection('appointments')
+        .doc(appointmentId)
+        .collection('session_notes')
+        .orderBy(
+      'createdAt',
+      descending: true,
+    )
+        .snapshots()
+        .map((snapshot) {
+
+      return snapshot.docs
+          .map(
+            (doc) => SessionNote.fromFirestore(doc),
+      )
+          .toList();
+
+    });
+
   }
 }

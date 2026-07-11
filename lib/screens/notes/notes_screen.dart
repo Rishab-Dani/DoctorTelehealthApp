@@ -3,7 +3,13 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
 
 class NotesScreen extends StatefulWidget {
-  const NotesScreen({super.key});
+
+  final String appointmentId;
+
+  const NotesScreen({
+    super.key,
+    required this.appointmentId,
+  });
 
   @override
   State<NotesScreen> createState() => _NotesScreenState();

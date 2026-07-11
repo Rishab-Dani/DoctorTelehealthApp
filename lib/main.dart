@@ -1,5 +1,6 @@
 import 'package:doctor_telehealth_app/providers/appointment_provider.dart';
 import 'package:doctor_telehealth_app/providers/auth_provider.dart';
+import 'package:doctor_telehealth_app/providers/session_note_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => AuthProvider()),
           ChangeNotifierProvider(create: (_) => AppointmentProvider()),
+          ChangeNotifierProvider(create: (_) => SessionNoteProvider()),
         ],
         child: const DoctorApp(),
       ),

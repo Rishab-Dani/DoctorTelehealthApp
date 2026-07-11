@@ -80,7 +80,9 @@ class AppointmentScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const NotesScreen(),
+                    builder: (_) => NotesScreen(
+                      appointmentId: appointment.id,
+                    ),
                   ),
                 );
 
