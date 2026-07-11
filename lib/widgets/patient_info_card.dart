@@ -20,6 +20,19 @@ class PatientInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Text(
+      "Appointment Details",
+      style: Theme.of(context)
+          .textTheme
+          .headlineMedium
+          ?.copyWith(
+        fontWeight: FontWeight.bold,
+      ),
+    );
+
+    const SizedBox(height: 15);
+
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -30,15 +43,25 @@ class PatientInfoCard extends StatelessWidget {
         child: Column(
           children: [
 
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Patient Details",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+            Row(
+              children: const [
+
+                CircleAvatar(
+                  radius: 26,
+                  child: Icon(Icons.person),
                 ),
-              ),
+
+                SizedBox(width: 15),
+
+                Text(
+                  "Patient Information",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+              ],
             ),
 
             const Divider(),

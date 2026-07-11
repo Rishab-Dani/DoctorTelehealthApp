@@ -23,18 +23,39 @@ class AppointmentStatusChip extends StatelessWidget {
 
       decoration: BoxDecoration(
         color: confirmed
-            ? Colors.green.shade100
-            : Colors.orange.shade100,
+            ? Colors.green.shade50
+            : Colors.orange.shade50,
         borderRadius: BorderRadius.circular(30),
-      ),
-
-      child: Text(
-        "Status : $status",
-        style: TextStyle(
+        border: Border.all(
           color:
           confirmed ? Colors.green : Colors.orange,
-          fontWeight: FontWeight.bold,
         ),
+      ),
+
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+
+          Icon(
+            confirmed
+                ? Icons.check_circle
+                : Icons.schedule,
+            color:
+            confirmed ? Colors.green : Colors.orange,
+          ),
+
+          const SizedBox(width: 8),
+
+          Text(
+            status,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color:
+              confirmed ? Colors.green : Colors.orange,
+            ),
+          ),
+
+        ],
       ),
     );
   }

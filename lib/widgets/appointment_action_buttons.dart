@@ -35,28 +35,35 @@ class AppointmentActionButtons extends StatelessWidget {
 
           width: double.infinity,
 
+          height: 55,
+
           child: ElevatedButton.icon(
 
-            icon: Icon(
-              confirmed
-                  ? Icons.video_call
-                  : Icons.cancel,
-            ),
+            icon: const Icon(Icons.video_call),
 
-            label: Text(
-              confirmed
-                  ? "Start Video Call"
-                  : "Cancel Appointment",
+            label: const Text(
+              "Start Video Consultation",
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
 
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-              confirmed ? Colors.green : Colors.red,
+
+              backgroundColor: Colors.green,
+
               foregroundColor: Colors.white,
+
+              shape: RoundedRectangleBorder(
+
+                borderRadius:
+                BorderRadius.circular(14),
+
+              ),
+
             ),
 
-            onPressed:
-            confirmed ? onVideoCall : onCancel,
+            onPressed: onVideoCall,
 
           ),
 
@@ -68,17 +75,38 @@ class AppointmentActionButtons extends StatelessWidget {
 
           width: double.infinity,
 
+          height: 55,
+
           child: OutlinedButton.icon(
 
             icon: const Icon(Icons.note_alt),
 
-            label: const Text("Session Notes"),
+            label: const Text(
+
+              "Open Session Notes",
+
+              style: TextStyle(
+                fontSize: 18,
+              ),
+
+            ),
+
+            style: OutlinedButton.styleFrom(
+
+              shape: RoundedRectangleBorder(
+
+                borderRadius:
+                BorderRadius.circular(14),
+
+              ),
+
+            ),
 
             onPressed: onNotes,
 
           ),
 
-        )
+        ),
 
       ],
     );
