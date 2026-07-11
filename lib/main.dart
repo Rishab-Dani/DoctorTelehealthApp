@@ -1,3 +1,4 @@
+import 'package:doctor_telehealth_app/providers/appointment_provider.dart';
 import 'package:doctor_telehealth_app/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,14 +15,13 @@ Future<void> main() async {
   );
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
-        ),
-      ],
-      child: const DoctorApp(),
-    ),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProvider(create: (_) => AppointmentProvider()),
+        ],
+        child: const DoctorApp(),
+      ),
   );
 }
 

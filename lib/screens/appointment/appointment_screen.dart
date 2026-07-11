@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../../models/appointment.dart';
 import '../notes/notes_screen.dart';
 
 class AppointmentScreen extends StatelessWidget {
-  const AppointmentScreen({super.key});
+
+  final Appointment appointment;
+
+  const AppointmentScreen({
+
+    super.key,
+
+    required this.appointment,
+
+  });
 
   @override
   Widget build(BuildContext context) {
 
-    bool isConfirmed = true;
+    bool isConfirmed =
+        appointment.status == "Confirmed";
 
     return Scaffold(
 
@@ -44,28 +55,28 @@ class AppointmentScreen extends StatelessWidget {
 
                 const Divider(),
 
-                const ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text("John David"),
-                  subtitle: Text("Patient Name"),
+                ListTile(
+                  leading: const Icon(Icons.person),
+                  title: Text(appointment.patientName),
+                  subtitle: const Text("Patient Name"),
                 ),
 
-                const ListTile(
-                  leading: Icon(Icons.badge),
-                  title: Text("PID1001"),
-                  subtitle: Text("Patient ID"),
+                ListTile(
+                  leading: const Icon(Icons.badge),
+                  title: Text(appointment.patientId),
+                  subtitle: const Text("Patient ID"),
                 ),
 
-                const ListTile(
-                  leading: Icon(Icons.cake),
-                  title: Text("30 Years"),
-                  subtitle: Text("Age"),
+                ListTile(
+                  leading: const Icon(Icons.cake),
+                  title: Text("${appointment.age} Years"),
+                  subtitle: const Text("Age"),
                 ),
 
-                const ListTile(
-                  leading: Icon(Icons.phone),
-                  title: Text("9876543210"),
-                  subtitle: Text("Phone"),
+                ListTile(
+                  leading: const Icon(Icons.phone),
+                  title: Text(appointment.phone),
+                  subtitle: const Text("Phone"),
                 ),
 
                 const ListTile(
