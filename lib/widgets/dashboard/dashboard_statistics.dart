@@ -21,7 +21,9 @@ class DashboardStatistics extends StatelessWidget {
           icon: Icons.calendar_today,
           color: Colors.blue,
         ),
-        const SizedBox(width: 15),
+
+        const SizedBox(width:20),
+
         DashboardStatCard(
           title: "Notes",
           value: notes.toString(),

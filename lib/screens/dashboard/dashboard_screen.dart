@@ -1,157 +1,178 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/appointment.dart';
 import '../../providers/appointment_provider.dart';
-import '../../widgets/dashboard_header.dart';
-import '../../widgets/dashboard_stat_card.dart';
-import '../../widgets/dashboard_statistics.dart';
+import '../../widgets/dashboard/dashboard_header.dart';
+import '../../widgets/dashboard/summary_card.dart';
+import '../../widgets/appointment/appointment_preview_card.dart';
 import '../appointment/appointment_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
+
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: const Color(0xffF3F6FB),
 
-      appBar: AppBar(
-        title: const Text("Doctor Dashboard"),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-
+      body: SafeArea(
         child: Column(
-
           children: [
+            /// Scrollable top section
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Header
+                    DashboardHeader(
+                      doctorName: user?.email?.split("@").first ?? "Doctor",
+                    ),
 
-            // doctor card
-            const DashboardHeader(),
+                    const SizedBox(height: 25),
 
-            const SizedBox(height: 20),
+                    /// Summary Title
+                    const Center(
+                      child: Text(
+                        "Today's Summary",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
 
-            // DashboardStatistics
-            const DashboardStatistics(
-              appointments: 1,
-              notes: 1,
-            ),
+                    const SizedBox(height: 20),
 
-            const SizedBox(height: 25),
+                    /// Summary Cards
+                    Row(
+                      children: const [
+                        Expanded(
+                          child: SummaryCard(
+                            title: "Appointments",
+                            value: "1",
+                            icon: Icons.calendar_today,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Expanded(
+                          child: SummaryCard(
+                            title: "Notes",
+                            value: "1",
+                            icon: Icons.edit_note,
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
 
-            // Today's appointments
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Today's Appointments",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                    const SizedBox(height: 30),
+
+                    /// Appointment Title
+                    const Center(
+                      child: Text(
+                      "Today's Appointments",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    /// Appointment List
+                    StreamBuilder<List<Appointment>>(
+                      stream: context
+                          .read<AppointmentProvider>()
+                          .appointments,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(30),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              snapshot.error.toString(),
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          );
+                        }
+
+                        if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Center(
+                              child: Text(
+                                "No Appointments Today",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          );
+                        }
+
+                        final appointments = snapshot.data!;
+
+                        debugPrint(
+                            "Appointments Count : ${appointments.length}");
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics:
+                          const NeverScrollableScrollPhysics(),
+                          itemCount: appointments.length,
+                          itemBuilder: (context, index) {
+                            final appointment =
+                            appointments[index];
+
+                            debugPrint(
+                                appointment.patientName);
+
+                            return Padding(
+                              padding:
+                              const EdgeInsets.only(bottom: 12),
+                              child: AppointmentPreviewCard(
+                                patientName:
+                                appointment.patientName,
+                                patientId:
+                                appointment.patientId,
+                                status: appointment.status,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          AppointmentScreen(
+                                            appointment:
+                                            appointment,
+                                          ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
-
-            const SizedBox(height: 10),
-
-            Expanded(
-              child: StreamBuilder<List<Appointment>>(
-                stream: context.read<AppointmentProvider>().appointments,
-
-                builder: (context, snapshot) {
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text(snapshot.error.toString()),
-                    );
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(
-                      child: Text("No appointments found"),
-                    );
-                  }
-
-                  final appointments = snapshot.data!;
-
-                  return ListView.builder(
-
-                    itemCount: appointments.length,
-
-                    itemBuilder: (context, index) {
-
-                      final appointment = appointments[index];
-
-                      return Card(
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            child: Icon(Icons.person),
-                          ),
-
-                          title: Text(
-                            appointment.patientName,
-                          ),
-
-                          subtitle: Text(
-                            appointment.patientId,
-                          ),
-
-                          trailing: Container(
-
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-
-                            decoration: BoxDecoration(
-                              color: appointment.status == "Confirmed"
-                                  ? Colors.green.shade100
-                                  : Colors.orange.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-
-                            child: Text(
-                              appointment.status,
-                            ),
-
-                          ),
-
-                          onTap: () {
-
-                            Navigator.push(
-
-                              context,
-
-                              MaterialPageRoute(
-
-                                builder: (_) => AppointmentScreen(
-                                  appointment: appointment,
-                                ),
-
-                              ),
-
-                            );
-
-                          },
-                        ),
-                      );
-
-                    },
-
-                  );
-
-                },
-              ),
-            )
-
           ],
         ),
       ),

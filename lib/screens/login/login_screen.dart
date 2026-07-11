@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/login/login_footer.dart';
+import '../../widgets/login/login_header.dart';
 import '../dashboard/dashboard_screen.dart';
 
 import 'package:provider/provider.dart';
@@ -13,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -25,138 +26,162 @@ class _LoginScreenState extends State<LoginScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
 
-      appBar: AppBar(
-        title: const Text("Doctor Login"),
-        centerTitle: true,
-      ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-
-        child: Form(
-
-          key: formKey,
-
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
-
             children: [
+              const LoginHeader(),
 
-              const SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.all(24),
 
-              const Icon(
-                Icons.local_hospital,
-                size: 90,
-                color: Colors.blue,
-              ),
+                child: Form(
+                  key: formKey,
 
-              const SizedBox(height: 40),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-              TextFormField(
+                    children: [
+                      const SizedBox(height: 15),
 
-                controller: emailController,
+                      const Text(
+                        "Welcome Back 👋",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
 
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
-                ),
+                      const SizedBox(height: 6),
 
-                validator: (value){
+                      const Text(
+                        "Sign in to continue",
+                        style: TextStyle(color: Colors.grey),
+                      ),
 
-                  if(value==null || value.isEmpty){
-                    return "Enter email";
-                  }
+                      const SizedBox(height: 30),
 
-                  return null;
-                },
+                      // email field
+                      TextFormField(
+                        controller: emailController,
 
-              ),
+                        decoration: InputDecoration(
+                          hintText: "Email",
 
-              const SizedBox(height:20),
+                          prefixIcon: const Icon(Icons.email),
 
-              TextFormField(
+                          filled: true,
 
-                controller: passwordController,
+                          fillColor: Colors.grey.shade100,
 
-                obscureText: true,
-
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                ),
-
-                validator: (value){
-
-                  if(value==null || value.length<6){
-                    return "Password should be minimum 6 characters";
-                  }
-
-                  return null;
-                },
-
-              ),
-
-              const SizedBox(height:30),
-
-              SizedBox(
-
-                width: double.infinity,
-
-                child: ElevatedButton(
-
-                    onPressed: () async {
-                      if (!formKey.currentState!.validate()) return;
-
-                      final authProvider =
-                      Provider.of<AuthProvider>(context, listen: false);
-
-                      final success = await authProvider.login(
-                        emailController.text.trim(),
-                        passwordController.text.trim(),
-                      );
-
-                      if (!mounted) return;
-
-                      if (success) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const DashboardScreen(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none,
                           ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Invalid email or password"),
+                        ),
+
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Enter email";
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // password field
+                      TextFormField(
+                        controller: passwordController,
+
+                        decoration: InputDecoration(
+                          hintText: "Password",
+
+                          prefixIcon: const Icon(Icons.lock),
+
+                          filled: true,
+
+                          fillColor: Colors.grey.shade100,
+
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none,
                           ),
-                        );
-                      }
-                    },
+                        ),
 
-                  child: authProvider.loading
-                      ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                      : const Text("LOGIN"),
+                        validator: (value) {
+                          if (value == null || value.length < 6) {
+                            return "Password should be minimum 6 characters";
+                          }
 
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      // login button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+
+                        child: ElevatedButton(
+
+                          onPressed: () async {
+                            if (!formKey.currentState!.validate()) return;
+
+                            final authProvider = Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            );
+
+                            final success = await authProvider.login(
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
+                            );
+
+                            if (!mounted) return;
+
+                            if (success) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => DashboardScreen(),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Invalid email or password"),
+                                ),
+                              );
+                            }
+                          },
+
+                          child: authProvider.loading
+                              ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                              : const Text(
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+              ),
 
-              )
-
+              const LoginFooter(),
             ],
-
           ),
-
         ),
-
       ),
-
     );
-
   }
 }
