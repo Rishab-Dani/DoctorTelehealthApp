@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/appointment.dart';
 import '../../providers/appointment_provider.dart';
+import '../../providers/dashboard_provider.dart';
 import '../../widgets/dashboard/dashboard_header.dart';
 import '../../widgets/dashboard/summary_card.dart';
 import '../../widgets/appointment/appointment_preview_card.dart';
@@ -51,22 +52,34 @@ class DashboardScreen extends StatelessWidget {
 
                     /// Summary Cards
                     Row(
-                      children: const [
+                      children: [
                         Expanded(
-                          child: SummaryCard(
-                            title: "Appointments",
-                            value: "1",
-                            icon: Icons.calendar_today,
-                            color: Colors.blue,
+                          child: StreamBuilder<int>(
+                            stream: DashboardProvider().appointmentCount(),
+                            builder: (context, snapshot) {
+                              return SummaryCard(
+                                title: "Appointments",
+                                value: "${snapshot.data ?? 0}",
+                                icon: Icons.calendar_today,
+                                color: Colors.blue,
+                              );
+                            },
                           ),
                         ),
-                        SizedBox(width: 15),
+
+                        const SizedBox(width: 15),
+
                         Expanded(
-                          child: SummaryCard(
-                            title: "Notes",
-                            value: "1",
-                            icon: Icons.edit_note,
-                            color: Colors.orange,
+                          child: StreamBuilder<int>(
+                            stream: DashboardProvider().noteCount(),
+                            builder: (context, snapshot) {
+                              return SummaryCard(
+                                title: "Notes",
+                                value: "${snapshot.data ?? 0}",
+                                icon: Icons.edit_note,
+                                color: Colors.orange,
+                              );
+                            },
                           ),
                         ),
                       ],
