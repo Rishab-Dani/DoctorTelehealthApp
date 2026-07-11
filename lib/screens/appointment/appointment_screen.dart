@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../notes/notes_screen.dart';
+
 class AppointmentScreen extends StatelessWidget {
   const AppointmentScreen({super.key});
 
@@ -130,7 +132,14 @@ class AppointmentScreen extends StatelessWidget {
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.note_alt),
                     label: const Text("Session Notes"),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const NotesScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
