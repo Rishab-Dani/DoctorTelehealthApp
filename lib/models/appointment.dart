@@ -12,6 +12,7 @@ class Appointment {
   final String doctorName;
   final String reason;
   final DateTime createdAt;
+  final String roomId;
 
   Appointment({
     required this.id,
@@ -25,6 +26,7 @@ class Appointment {
     required this.doctorName,
     required this.reason,
     required this.createdAt,
+    required this.roomId
   });
 
   factory Appointment.fromFirestore(DocumentSnapshot doc) {
@@ -48,6 +50,8 @@ class Appointment {
       createdAt:
       (data['createdAt'] as Timestamp?)?.toDate() ??
           DateTime.now(),
+
+      roomId: data['roomId'] ?? '',
     );
   }
 
@@ -63,6 +67,7 @@ class Appointment {
       'doctorName': doctorName,
       'reason': reason,
       'createdAt': createdAt,
+      'roomId': roomId,
     };
   }
 }

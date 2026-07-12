@@ -120,6 +120,7 @@ class _BookAppointmentScreenState
 
     final appointment = Appointment(
       id: "",
+      roomId: "",
       patientId:
       FirebaseAuth.instance.currentUser!.uid,
       patientName: _nameController.text.trim(),

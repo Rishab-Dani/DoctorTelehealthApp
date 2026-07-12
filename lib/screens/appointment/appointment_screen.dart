@@ -107,55 +107,80 @@ class AppointmentScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // video consultation
-              VideoConsultationCard(
-                onStartCall: () async {
+              if (isConfirmed)
+                VideoConsultationCard(
+                  onStartCall: () async {
 
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
 
-                  await Future.delayed(
-                    const Duration(milliseconds: 600),
-                  );
+                    await Future.delayed(
+                      const Duration(milliseconds: 600),
+                    );
 
-                  if (!context.mounted) return;
+                    if (!context.mounted) return;
 
-                  Navigator.pop(context);
+                    Navigator.pop(context);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => VideoCallScreen(
-                        userId: VideoCallService.getUserId(),
-                        userName: VideoCallService.getUserName(),
-                        callId: VideoCallService.generateCallId(
-                          appointment.id,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => VideoCallScreen(
+                          userId: VideoCallService.getUserId(),
+                          userName: VideoCallService.getUserName(),
+                          callId: appointment.roomId,
                         ),
                       ),
+                    );
+                  },
+                ),
+
+              if (isPending)
+                Card(
+                  color: Colors.orange.shade50,
+                  child: const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.hourglass_top,
+                          color: Colors.orange,
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            "Confirm the appointment before starting the video consultation.",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
 
               const SizedBox(height: 20),
 
               // session notes
-              SessionNotesCard(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => NotesScreen(
-                        appointmentId: appointment.id,
+              if (isConfirmed || isCompleted)
+                SessionNotesCard(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => NotesScreen(
+                          appointmentId: appointment.id,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
 
               const SizedBox(height: 20),
 

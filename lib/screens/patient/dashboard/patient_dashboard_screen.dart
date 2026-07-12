@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/utils/date_time_formatter.dart';
 import '../../../models/appointment.dart';
 import '../../../providers/appointment_provider.dart';
+import '../../../services/video_call_service.dart';
+import '../../video_call/video_call_screen.dart';
 import '../appointment/my_appointments_screen.dart';
 import '../booking/book_appointment_screen.dart';
 
@@ -12,7 +15,7 @@ class PatientDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FB),
+      backgroundColor: const Color(0xffF5F7FB),
 
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -264,8 +267,56 @@ class PatientDashboardScreen extends StatelessWidget {
 
                         const SizedBox(height: 10),
 
-                        Text(
-                          appointment.appointmentTime.toString(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            Row(
+                              children: [
+
+                                const Icon(
+                                  Icons.calendar_today,
+                                  size: 16,
+                                  color: Colors.grey,
+                                ),
+
+                                const SizedBox(width: 6),
+
+                                Text(
+                                  DateTimeFormatter.formatDate(
+                                    appointment.appointmentTime,
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Row(
+                              children: [
+
+                                const Icon(
+                                  Icons.access_time,
+                                  size: 16,
+                                  color: Colors.grey,
+                                ),
+
+                                const SizedBox(width: 6),
+
+                                Text(
+                                  DateTimeFormatter.formatTime(
+                                    appointment.appointmentTime,
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
 
                         const SizedBox(height: 15),
@@ -294,8 +345,20 @@ class PatientDashboardScreen extends StatelessWidget {
                                 "Join Consultation",
                               ),
                               onPressed: () {
-                                // Next phase:
-                                // Navigate to VideoCallScreen
+
+                                final callId = appointment.roomId;
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => VideoCallScreen(
+                                      userId: VideoCallService.getUserId(),
+                                      userName: appointment.patientName,
+                                      callId: callId,
+                                    ),
+                                  ),
+                                );
+
                               },
                             ),
                           ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctor_telehealth_app/services/video_call_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/appointment.dart';
 import '../models/patient.dart';
@@ -159,19 +160,22 @@ class FirestoreService {
     required Appointment appointment,
   }) async {
 
-    await _firestore
-        .collection('appointments')
-        .add({
+    final doc =
+    _firestore.collection('appointments').doc();
+
+    final roomId =
+    VideoCallService.generateCallId(doc.id);
+
+    await doc.set({
 
       ...appointment.toMap(),
 
-      "doctorId": appointment.doctorId,
-      "doctorName": appointment.doctorName,
-      "reason": appointment.reason,
+      "roomId": roomId,
 
       "status": "Pending",
 
-      "createdAt": FieldValue.serverTimestamp(),
+      "createdAt":
+      FieldValue.serverTimestamp(),
 
     });
 
@@ -179,23 +183,22 @@ class FirestoreService {
 
   // get only patient Appointments
   Stream<List<Appointment>> getPatientAppointments() {
-
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
     return _firestore
         .collection('appointments')
         .where('patientId', isEqualTo: uid)
-        .orderBy(
-      'appointmentTime',
-      descending: false,
-    )
         .snapshots()
         .map((snapshot) {
-
-      return snapshot.docs
+      final appointments = snapshot.docs
           .map((doc) => Appointment.fromFirestore(doc))
           .toList();
 
+      appointments.sort(
+            (a, b) => a.appointmentTime.compareTo(b.appointmentTime),
+      );
+
+      return appointments;
     });
   }
 
@@ -241,21 +244,30 @@ class FirestoreService {
     return _firestore
         .collection('appointments')
         .where('patientId', isEqualTo: uid)
-        .where(
-      'status',
-      whereIn: ['Pending', 'Confirmed'],
+        .orderBy(
+      'appointmentTime',
+      descending: false,
     )
-        .orderBy('appointmentTime')
-        .limit(1)
         .snapshots()
         .map((snapshot) {
       if (snapshot.docs.isEmpty) {
         return null;
       }
 
-      return Appointment.fromFirestore(
-        snapshot.docs.first,
-      );
+      final appointments = snapshot.docs
+          .map((doc) => Appointment.fromFirestore(doc))
+          .where(
+            (appointment) =>
+        appointment.status.toLowerCase() == "pending" ||
+            appointment.status.toLowerCase() == "confirmed",
+      )
+          .toList();
+
+      if (appointments.isEmpty) {
+        return null;
+      }
+
+      return appointments.first;
     });
   }
 }
