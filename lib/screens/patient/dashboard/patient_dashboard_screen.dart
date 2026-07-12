@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,12 +6,87 @@ import '../../../core/utils/date_time_formatter.dart';
 import '../../../models/appointment.dart';
 import '../../../providers/appointment_provider.dart';
 import '../../../services/video_call_service.dart';
+import '../../login/login_screen.dart';
 import '../../video_call/video_call_screen.dart';
 import '../appointment/my_appointments_screen.dart';
 import '../booking/book_appointment_screen.dart';
 
 class PatientDashboardScreen extends StatelessWidget {
   const PatientDashboardScreen({super.key});
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: const Text(
+          "Logout",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: const Text(
+          "Are you sure you want to logout?",
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        actions: [
+
+          Row(
+            children: [
+
+              Expanded(
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancel"),
+                ),
+              ),
+
+              const SizedBox(width: 12),
+
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    if (!context.mounted) return;
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const LoginScreen(),
+                      ),
+                          (route) => false,
+                    );
+                  },
+                  child: const Text("Logout"),
+                ),
+              ),
+
+            ],
+          ),
+
+        ],
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +100,21 @@ class PatientDashboardScreen extends StatelessWidget {
         title: const Text(
           "Patient Dashboard",
           style: TextStyle(
-            color: Colors.black87,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              _showLogoutDialog(context);
+            },
+          ),
+        ],
       ),
 
       body: SingleChildScrollView(
@@ -72,7 +159,7 @@ class PatientDashboardScreen extends StatelessWidget {
                   SizedBox(height: 18),
 
                   Text(
-                    "Welcome to TeleHealth",
+                    "Welcome to DocConnect",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -343,7 +430,7 @@ class PatientDashboardScreen extends StatelessWidget {
 
                         Chip(
                           backgroundColor:
-                          statusColor.withOpacity(.15),
+                          statusColor.withValues(alpha:.15),
 
                           label: Text(
                             appointment.status,
@@ -414,7 +501,7 @@ class PatientDashboardScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(.15),
+              color: Colors.grey.withValues(alpha:.15),
               blurRadius: 12,
             ),
           ],
@@ -426,7 +513,7 @@ class PatientDashboardScreen extends StatelessWidget {
 
             CircleAvatar(
               radius: 28,
-              backgroundColor: color.withOpacity(.15),
+              backgroundColor: color.withValues(alpha:.15),
 
               child: Icon(
                 icon,

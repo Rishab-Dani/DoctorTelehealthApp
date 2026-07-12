@@ -25,7 +25,7 @@ class SessionNotesCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.05),
+              color: Colors.black.withValues(alpha:.05),
               blurRadius: 18,
               offset: const Offset(0, 8),
             ),
@@ -37,7 +37,7 @@ class SessionNotesCard extends StatelessWidget {
               height: 60,
               width: 60,
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(.12),
+                color: Colors.orange.withValues(alpha:.12),
                 borderRadius: BorderRadius.circular(18),
               ),
               child: const Icon(

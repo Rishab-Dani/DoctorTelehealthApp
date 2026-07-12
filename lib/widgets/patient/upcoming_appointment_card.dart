@@ -45,7 +45,7 @@ class UpcomingAppointmentCard extends StatelessWidget {
 
           BoxShadow(
 
-            color: Colors.black.withOpacity(.05),
+            color: Colors.black.withValues(alpha:.05),
 
             blurRadius: 12,
 
@@ -113,7 +113,7 @@ class UpcomingAppointmentCard extends StatelessWidget {
           Chip(
 
             backgroundColor:
-            statusColor.withOpacity(.15),
+            statusColor.withValues(alpha:.15),
 
             label: Text(
 

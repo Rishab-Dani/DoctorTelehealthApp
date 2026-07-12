@@ -20,7 +20,7 @@ class AppointmentSummaryCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withOpacity(.08),
+        color: color.withValues(alpha:.08),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -29,7 +29,7 @@ class AppointmentSummaryCard extends StatelessWidget {
             height: 44,
             width: 44,
             decoration: BoxDecoration(
-              color: color.withOpacity(.15),
+              color: color.withValues(alpha:.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -87,7 +87,7 @@ class AppointmentSummaryCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: Colors.black.withValues(alpha:.05),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),

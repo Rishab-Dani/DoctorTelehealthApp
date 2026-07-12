@@ -22,7 +22,7 @@ class VideoConsultationCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: Colors.black.withValues(alpha:.05),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -35,7 +35,7 @@ class VideoConsultationCard extends StatelessWidget {
             height: 74,
             width: 74,
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(.12),
+              color: Colors.green.withValues(alpha:.12),
               borderRadius: BorderRadius.circular(22),
             ),
             child: const Icon(

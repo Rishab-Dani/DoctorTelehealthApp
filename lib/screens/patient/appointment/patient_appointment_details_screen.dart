@@ -4,7 +4,7 @@ import '../../../core/utils/date_time_formatter.dart';
 import '../../../models/appointment.dart';
 import '../../../services/video_call_service.dart';
 import '../../video_call/video_call_screen.dart';
-import '../notes/ patient_consultation_notes_screen.dart';
+import '../notes/patient_consultation_notes_screen.dart';
 //import '../notes/patient_notes_screen.dart';
 
 class PatientAppointmentDetailsScreen extends StatelessWidget {
@@ -39,7 +39,7 @@ class PatientAppointmentDetailsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(22),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(.05),
+                    color: Colors.black.withValues(alpha:.05),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -136,7 +136,7 @@ class PatientAppointmentDetailsScreen extends StatelessWidget {
                 boxShadow: appointment.status.toLowerCase() == "confirmed"
                     ? [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(.30),
+                          color: Colors.blue.withValues(alpha:.30),
                           blurRadius: 15,
                           offset: const Offset(0, 8),
                         ),
@@ -357,7 +357,7 @@ class PatientAppointmentDetailsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
       decoration: BoxDecoration(
-        color: color.withOpacity(.12),
+        color: color.withValues(alpha:.12),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Text(

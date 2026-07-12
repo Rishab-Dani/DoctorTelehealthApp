@@ -165,7 +165,7 @@ class MyAppointmentsScreen extends StatelessWidget {
                   },
                 child: Card(
                   elevation: 6,
-                  shadowColor: Colors.blue.withOpacity(.08),
+                  shadowColor: Colors.blue.withValues(alpha:.08),
 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(22),

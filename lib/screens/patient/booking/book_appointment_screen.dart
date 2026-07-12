@@ -45,8 +45,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   Future<void> loadPatient() async {
     final patient = await firestoreService.getCurrentPatient();
 
-    if (patient == null) return;
-
     _nameController.text = patient.name;
     _ageController.text = patient.age.toString();
     _phoneController.text = patient.phone;
@@ -267,7 +265,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
 
               Card(
                 elevation: 8,
-                shadowColor: Colors.blue.withOpacity(.12),
+                shadowColor: Colors.blue.withValues(alpha:.12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),

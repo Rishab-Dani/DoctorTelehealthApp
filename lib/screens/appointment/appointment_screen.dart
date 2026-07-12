@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/firestore_service.dart';
-import '../notes/consultation_notes_screen.dart';
+import '../notes/doctor_consultation_notes_screen.dart';
 import '../video_call/video_call_screen.dart';
 import '../../models/appointment.dart';
 import '../../services/video_call_service.dart';
@@ -9,7 +9,6 @@ import '../../widgets/appointment/appointment_summary_card.dart';
 import '../../widgets/appointment/session_notes_card.dart';
 import '../../widgets/appointment/video_consultation_card.dart';
 import '../../widgets/dashboard/patient_info_card.dart';
-import '../notes/notes_screen.dart';
 
 class AppointmentScreen extends StatelessWidget {
   final Appointment appointment;
@@ -172,15 +171,6 @@ class AppointmentScreen extends StatelessWidget {
               if (isConfirmed || isCompleted)
                 SessionNotesCard(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (_) => NotesScreen(
-                    //       appointmentId: appointment.id,
-                    //     ),
-                    //   ),
-                    // );
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(
