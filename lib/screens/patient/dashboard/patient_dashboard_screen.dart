@@ -142,22 +142,6 @@ class PatientDashboardScreen extends StatelessWidget {
 
                     }
                 ),
-
-                _buildCard(
-                  context,
-                  Icons.history,
-                  "History",
-                  Colors.orange,
-                      () {},
-                ),
-
-                _buildCard(
-                  context,
-                  Icons.person,
-                  "Profile",
-                  Colors.purple,
-                      () {},
-                ),
               ],
             ),
 
@@ -212,7 +196,43 @@ class PatientDashboardScreen extends StatelessWidget {
                   );
                 }
 
-                final appointment = snapshot.data!.first;
+                final now = DateTime.now();
+
+                final upcomingAppointments = snapshot.data!
+                    .where((appointment) {
+                  final status = appointment.status.toLowerCase();
+
+                  return (status == "pending" ||
+                      status == "confirmed") &&
+                      appointment.appointmentTime.isAfter(now);
+                })
+                    .toList()
+                  ..sort(
+                        (a, b) => a.appointmentTime.compareTo(b.appointmentTime),
+                  );
+
+                if (upcomingAppointments.isEmpty) {
+                  return Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Center(
+                        child: Text(
+                          "No Upcoming Appointment",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                final appointment = upcomingAppointments.first;
 
                 Color statusColor;
 

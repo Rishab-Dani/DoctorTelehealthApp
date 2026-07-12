@@ -276,7 +276,7 @@ class FirestoreService {
     });
   }
 
-  // get upcoming Appointment
+  // Get Upcoming Appointment
   Stream<Appointment?> getUpcomingAppointment() {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -293,13 +293,16 @@ class FirestoreService {
         return null;
       }
 
+      final now = DateTime.now();
+
       final appointments = snapshot.docs
           .map((doc) => Appointment.fromFirestore(doc))
-          .where(
-            (appointment) =>
-        appointment.status.toLowerCase() == "pending" ||
-            appointment.status.toLowerCase() == "confirmed",
-      )
+          .where((appointment) {
+        final status = appointment.status.toLowerCase();
+
+        return (status == "pending" || status == "confirmed") &&
+            appointment.appointmentTime.isAfter(now);
+      })
           .toList();
 
       if (appointments.isEmpty) {
