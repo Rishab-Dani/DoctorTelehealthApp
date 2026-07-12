@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_telehealth_app/services/video_call_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/appointment.dart';
+import '../models/consultation_note.dart';
 import '../models/patient.dart';
 import '../models/session_note.dart';
 
@@ -57,6 +58,26 @@ class FirestoreService {
       return snapshot.docs
           .map((doc) => SessionNote.fromFirestore(doc))
           .toList();
+
+    });
+
+  }
+
+  // save consultation notes
+  Future<void> saveConsultationNotes({
+    required String appointmentId,
+    required ConsultationNote note,
+  }) async {
+
+    await _firestore
+        .collection("appointments")
+        .doc(appointmentId)
+        .update({
+
+      ...note.toMap(),
+
+      "notesUpdatedAt":
+      FieldValue.serverTimestamp(),
 
     });
 
@@ -165,6 +186,24 @@ class FirestoreService {
 
     final roomId =
     VideoCallService.generateCallId(doc.id);
+
+    final existingAppointment = await _firestore
+        .collection('appointments')
+        .where('patientId', isEqualTo: appointment.patientId)
+        .where(
+      'appointmentTime',
+      isEqualTo: Timestamp.fromDate(
+        appointment.appointmentTime,
+      ),
+    )
+        .limit(1)
+        .get();
+
+    if (existingAppointment.docs.isNotEmpty) {
+      throw Exception(
+        "You already have an appointment at this date and time.",
+      );
+    }
 
     await doc.set({
 

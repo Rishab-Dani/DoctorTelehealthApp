@@ -121,8 +121,7 @@ class _BookAppointmentScreenState
     final appointment = Appointment(
       id: "",
       roomId: "",
-      patientId:
-      FirebaseAuth.instance.currentUser!.uid,
+      patientId: FirebaseAuth.instance.currentUser!.uid,
       patientName: _nameController.text.trim(),
       age: int.parse(_ageController.text.trim()),
       phone: _phoneController.text.trim(),
@@ -132,9 +131,16 @@ class _BookAppointmentScreenState
       status: "Pending",
       appointmentTime: appointmentDateTime,
       createdAt: DateTime.now(),
+      diagnosis: "",
+      prescription: "",
+      medicines: "",
+      advice: "",
+      remarks: "",
+      followUpDate: null,
     );
 
     try {
+
       await firestoreService.bookAppointment(
         appointment: appointment,
       );
@@ -144,18 +150,25 @@ class _BookAppointmentScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            "Appointment booked successfully",
+            "Appointment Booked Successfully",
           ),
+          backgroundColor: Colors.green,
         ),
       );
 
-      Navigator.pop(context);
     } catch (e) {
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text(
+            e.toString().replaceFirst("Exception: ", ""),
+          ),
+          backgroundColor: Colors.red,
         ),
       );
+
     }
 
     setState(() {

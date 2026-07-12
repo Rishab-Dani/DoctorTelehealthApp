@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/firestore_service.dart';
+import '../notes/consultation_notes_screen.dart';
 import '../video_call/video_call_screen.dart';
 import '../../models/appointment.dart';
 import '../../services/video_call_service.dart';
@@ -171,10 +172,19 @@ class AppointmentScreen extends StatelessWidget {
               if (isConfirmed || isCompleted)
                 SessionNotesCard(
                   onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (_) => NotesScreen(
+                    //       appointmentId: appointment.id,
+                    //     ),
+                    //   ),
+                    // );
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => NotesScreen(
+                        builder: (_) => ConsultationNotesScreen(
                           appointmentId: appointment.id,
                         ),
                       ),

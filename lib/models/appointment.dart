@@ -13,6 +13,13 @@ class Appointment {
   final String reason;
   final DateTime createdAt;
   final String roomId;
+  //consolation notes
+  final String diagnosis;
+  final String prescription;
+  final String medicines;
+  final String advice;
+  final String remarks;
+  final DateTime? followUpDate;
 
   Appointment({
     required this.id,
@@ -26,7 +33,13 @@ class Appointment {
     required this.doctorName,
     required this.reason,
     required this.createdAt,
-    required this.roomId
+    required this.roomId,
+    required this.diagnosis,
+    required this.prescription,
+    required this.medicines,
+    required this.advice,
+    required this.remarks,
+    this.followUpDate,
   });
 
   factory Appointment.fromFirestore(DocumentSnapshot doc) {
@@ -41,10 +54,9 @@ class Appointment {
       status: data['status'],
       appointmentTime:
       (data['appointmentTime'] as Timestamp).toDate(),
+
       doctorId: data['doctorId'] ?? '',
-
       doctorName: data['doctorName'] ?? '',
-
       reason: data['reason'] ?? '',
 
       createdAt:
@@ -52,6 +64,15 @@ class Appointment {
           DateTime.now(),
 
       roomId: data['roomId'] ?? '',
+      diagnosis: data['diagnosis'] ?? '',
+      prescription: data['prescription'] ?? '',
+      medicines: data['medicines'] ?? '',
+      advice: data['advice'] ?? '',
+      remarks: data['remarks'] ?? '',
+      followUpDate:
+      data['followUpDate'] != null
+          ? (data['followUpDate'] as Timestamp).toDate()
+          : null,
     );
   }
 
@@ -68,6 +89,12 @@ class Appointment {
       'reason': reason,
       'createdAt': createdAt,
       'roomId': roomId,
+      'diagnosis': diagnosis,
+      'prescription': prescription,
+      'medicines': medicines,
+      'advice': advice,
+      'remarks': remarks,
+      'followUpDate': followUpDate,
     };
   }
 }

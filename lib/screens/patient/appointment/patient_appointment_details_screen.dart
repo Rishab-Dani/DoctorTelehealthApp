@@ -4,6 +4,7 @@ import '../../../core/utils/date_time_formatter.dart';
 import '../../../models/appointment.dart';
 import '../../../services/video_call_service.dart';
 import '../../video_call/video_call_screen.dart';
+import '../notes/ patient_consultation_notes_screen.dart';
 //import '../notes/patient_notes_screen.dart';
 
 class PatientAppointmentDetailsScreen extends StatelessWidget {
@@ -149,12 +150,15 @@ class PatientAppointmentDetailsScreen extends StatelessWidget {
                 icon: const Icon(Icons.video_call),
 
                 label: Text(
-                  canJoin
+                  appointment.status.toLowerCase() == "completed"
+                      ? "Consultation Finished"
+                      : canJoin
                       ? "Join Consultation"
                       : "Waiting for Doctor",
                 ),
 
-                onPressed: () {
+                onPressed: canJoin
+                    ? () {
 
                   final callId = appointment.roomId;
 
@@ -169,9 +173,23 @@ class PatientAppointmentDetailsScreen extends StatelessWidget {
                     ),
                   );
 
-                },
+                }
+                    : null,
               ),
             ),
+
+            if (appointment.status.toLowerCase() == "completed")
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  "This consultation has been completed.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.green.shade700,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
 
             const SizedBox(height: 20),
 
@@ -179,18 +197,37 @@ class PatientAppointmentDetailsScreen extends StatelessWidget {
 
               width: double.infinity,
 
-              child: OutlinedButton.icon(
-                icon: const Icon(Icons.notes),
-                label: const Text("Consultation Notes"),
+              child: appointment.status.toLowerCase() == "completed"
+                  ? OutlinedButton.icon(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Consultation Notes - Coming Soon",
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PatientConsultationNotesScreen(
+                        appointment: appointment,
                       ),
                     ),
                   );
                 },
+                icon: const Icon(Icons.notes),
+                label: const Text("Consultation Notes"),
+              )
+                  : Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.orange),
+                ),
+                child: const Text(
+                  "Consultation notes will be available after the doctor completes the consultation.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
 
