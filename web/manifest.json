@@ -1,6 +1,6 @@
 {
-    "name": "doctor_telehealth_app",
-    "short_name": "doctor_telehealth_app",
+    "name": "DocConnect",
+    "short_name": "DocConnect",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

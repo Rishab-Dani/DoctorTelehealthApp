@@ -94,6 +94,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       return;
     }
 
+
     setState(() {
       loading = true;
     });
@@ -134,7 +135,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Appointment Booked Successfully"),
+          content: Text("Appointment Booked Successfully !"),
           backgroundColor: Colors.green,
         ),
       );

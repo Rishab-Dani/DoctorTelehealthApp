@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../../widgets/login/login_footer.dart';
 import '../../widgets/login/login_header.dart';
-import '../dashboard/doctor_dashboard_screen.dart';
+import '../doctor/dashboard/doctor_dashboard_screen.dart';
 import '../patient/dashboard/patient_dashboard_screen.dart';
-
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 

@@ -92,10 +92,10 @@ BEGIN
             VALUE "CompanyName", "com.rishab" "\0"
             VALUE "FileDescription", "doctor_telehealth_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "doctor_telehealth_app" "\0"
+            VALUE "InternalName", "DocConnect" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.rishab. All rights reserved." "\0"
-            VALUE "OriginalFilename", "doctor_telehealth_app.exe" "\0"
-            VALUE "ProductName", "doctor_telehealth_app" "\0"
+            VALUE "OriginalFilename", "DocConnect.exe" "\0"
+            VALUE "ProductName", "DocConnect" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

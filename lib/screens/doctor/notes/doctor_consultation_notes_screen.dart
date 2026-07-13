@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../models/consultation_note.dart';
+import '../../../services/firestore_service.dart';
 
-import '../../models/consultation_note.dart';
-import '../../services/firestore_service.dart';
 
 class ConsultationNotesScreen extends StatefulWidget {
   final String appointmentId;
@@ -103,6 +103,10 @@ class _ConsultationNotesScreenState
         backgroundColor: Colors.green,
       ),
     );
+
+    if (!mounted) return;
+
+    Navigator.pop(context);
   }
 
   @override
